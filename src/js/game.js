@@ -38,30 +38,12 @@
       this.game.physics.p2.gravity.y = 200;
       
       this.velocity = 100;
-      this.index = 0;
+      this.generateRate = 0;
       //this.outOfBoundsKill = true;
       this.checkWorldBounds = true;
-      this.maxPool = 100;
+      this.maxPool = 1000;
 
       this.input.onDown.add(this.onDown, this);
-    },
-
-    onDown: function () {
-
-      var radius = 200,
-          mass = 1,
-          force = 5;
-
-      var circle = new Phaser.Circle(this.input.position.x, this.input.position.y, radius);
-
-      this.boxes.forEach(function(object) {
-          if(circle.contains(object.position.x, object.position.y)){
-            var distance = object.position.distance(circle);
-            var angle = object.position.angle(circle);
-            object.body.velocity.x += Math.cos(angle) * ((radius - distance) / mass) * force;
-            object.body.velocity.y += Math.sin(angle) * ((radius - distance) / mass) * force;
-          }
-        }, this);
     },
 
     update: function () {
@@ -73,48 +55,79 @@
       cy = this.world.centerY;
 
       angle = Math.atan2(y - cy, x - cx) * (180 / Math.PI);
-      /*this.player.angle = angle;
 
-      dx = x - cx;
-      dy = y - cy;
-      scale = Math.sqrt(dx * dx + dy * dy) / 100;
-
-      this.player.scale.x = scale * 0.6;
-      this.player.scale.y = scale * 0.6;*/
-
-
-      this.index++;
-      if(this.index === 10) {
-        var c = Math.floor((Math.random() * 3) + 1);
-        if(c === 1) {
-          this.addEnemy('red', x, angle);
-        }else if(c === 2) {
-          this.addEnemy('green', x, angle);
-        }else {
-          this.addEnemy('blue', x, angle);
-        }
-        this.index = 0;
-        
+      this.generateRate++;
+      if(this.generateRate === 10) {
+        this.randomBox(x, this.game.height - 500, angle);
+        this.generateRate = 0;
       }
       
     },
-    addEnemy: function (c, mx, a) {
+
+    randomBox: function (x, y, angle) {
+
+      var rndX = x + this.game.rnd.integerInRange(-10, 10),
+          rndY = y + this.game.rnd.integerInRange(-10, 10),
+          c = this.game.rnd.integerInRange(1, 3),
+          color = 'blue';
+
+      if(c === 1) {
+        color = 'red';
+      }
+      else if(c === 2) {
+        color = 'green';
+      }
+
+      this.addBox(color, rndX, angle, rndY);
+
+    },
+
+    addBox: function (c, mx, a, my) {
 
       if(this.maxPool < this.boxes.countLiving()){
         return;
       }
       var color = c;
-      var box = this.boxes.create(mx, this.game.height-500, color);
+     
+      var box = this.boxes.create(mx, my, color);
       box.body.setRectangle(10, 10);
-      box.scale.set(1);
+      //box.scale.set(1);
       box.angle = a;
 
       box.body.setCollisionGroup(this.boxCollisionGroup);
       box.body.collides([this.boxCollisionGroup, this.playerCollisionGroup]);
       box.body.collideWorldBounds = true;
     },
-    onInputDown: function () {
-      this.game.state.start('menu');
+
+    onDown: function () {
+
+      var x = this.input.position.x,
+          y = this.input.position.y,
+          boxesPerClick = 20;
+
+      for (var i = 0; i < boxesPerClick; i++) {
+        this.randomBox(x, y, 0);
+      };
+
+      var radius = 200,
+          mass = 1,
+          force = 5,
+          //create a circle where the user has clicked
+          //that will act as the explosion radius
+          circle = new Phaser.Circle(this.input.position.x, this.input.position.y, radius);
+
+      this.boxes.forEach(function(box) {
+        //check if the box is inside the circle
+        if(circle.contains(box.position.x, box.position.y)){
+          
+          var distance = box.position.distance(circle), //get distance from the box to the circle
+              angle = box.position.angle(circle); //get angle
+
+          //add velocity prototional to the distance of the explosion
+          box.body.velocity.x += Math.cos(angle) * ((radius - distance) / mass) * force;
+          box.body.velocity.y += Math.sin(angle) * ((radius - distance) / mass) * force;
+        }
+      }, this);
     }
 
   };
