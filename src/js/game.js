@@ -31,7 +31,7 @@
 
       this.game.physics.p2.enable(this.logo, true);
       this.logo.body.clearShapes();
-      this.logo.body.loadPolygon('physicsLogo', 'logo-trans');
+      this.logo.body.loadPolygon('physicsLogo', 'logoTrans');
       this.logo.body.kinematic = true;
       this.logo.body.setCollisionGroup(this.playerCollisionGroup);
       this.logo.body.collides(this.boxCollisionGroup, this.hitEnemy, this);
