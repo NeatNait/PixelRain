@@ -14,10 +14,11 @@
 
       this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
       this.load.setPreloadSprite(this.asset);
-      this.load.image('player', 'assets/logo.png');
+      this.load.image('player', 'assets/logo-trans.png');
       this.load.image('blue', 'assets/blue.png');
       this.load.image('red', 'assets/red.png');
       this.load.image('green', 'assets/green.png');
+      this.load.physics('physicsLogo', 'assets/logo.json');
       this.load.bitmapFont('minecraftia', 'assets/minecraftia.png', 'assets/minecraftia.xml');
     },
 

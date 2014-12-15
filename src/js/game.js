@@ -4,7 +4,6 @@
   function Game() {
     this.player = null;
   }
-
   Game.prototype = {
 
     create: function () {
@@ -12,12 +11,10 @@
         , y = this.game.height / 2;
 
       // Use the logo as player
-      this.player = this.add.sprite(x, y, 'player');
-      this.player.anchor.setTo(0.5, 0.5);
-      //this.game.world.setBounds(0, 0, 1000, 1000);
+      this.logo = this.game.add.sprite(x, y, 'player');
+      this.logo.anchor.setTo(0.5, 0.5);
 
       this.game.physics.startSystem(Phaser.Physics.P2JS);
-
       this.game.physics.p2.setImpactEvents(true);
 
       this.playerCollisionGroup = this.game.physics.p2.createCollisionGroup();
@@ -30,13 +27,14 @@
       this.boxes.enableBody = true;
       this.boxes.physicsBodyType = Phaser.Physics.P2JS;
 
-      this.player.anchor.setTo(0.5, 0.5);
-      this.player.scale.set(0.3);
+      this.logo.scale.set(0.3);
 
-      this.game.physics.p2.enable(this.player, true);
-      this.player.body.kinematic = true;
-      this.player.body.setCollisionGroup(this.playerCollisionGroup);
-      this.player.body.collides(this.boxCollisionGroup, this.hitEnemy, this);
+      this.game.physics.p2.enable(this.logo, true);
+      this.logo.body.clearShapes();
+      this.logo.body.loadPolygon('physicsLogo', 'logo-trans');
+      this.logo.body.kinematic = true;
+      this.logo.body.setCollisionGroup(this.playerCollisionGroup);
+      this.logo.body.collides(this.boxCollisionGroup, this.hitEnemy, this);
       this.game.physics.p2.gravity.y = 200;
       
       this.velocity = 100;
@@ -66,8 +64,16 @@
 
       this.index++;
       if(this.index === 10) {
+        var c = Math.floor((Math.random() * 3) + 1);
+        if(c === 1) {
+          this.addEnemy('red', x, angle);
+        }else if(c === 2) {
+          this.addEnemy('green', x, angle);
+        }else {
+          this.addEnemy('blue', x, angle);
+        }
         this.index = 0;
-        this.addEnemy('blue', x, angle);
+        
       }
       
     },
