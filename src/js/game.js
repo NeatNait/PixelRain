@@ -15,9 +15,10 @@
       // Use the logo as player
       this.player = this.add.sprite(x, y, 'player');
       this.player.anchor.setTo(0.5, 0.5);
-      //this.input.onDown.add(this.onInputDown, this);
+      this.game.world.setBounds(0, 0, 2000, 2000);
 
       this.game.physics.startSystem(Phaser.Physics.P2JS);
+
       this.game.physics.p2.setImpactEvents(true);
 
       this.playerCollisionGroup = this.game.physics.p2.createCollisionGroup();
@@ -42,12 +43,12 @@
           }
 
 
-          var box = this.boxes.create(x, y*20, color);
+          var box = this.boxes.create(x, y*10, color);
           box.body.setRectangle(20, 20);
           box.scale.set(0.2);
 
           box.body.setCollisionGroup(this.boxCollisionGroup);
-          box.body.collides([this.boxCollisionGroup, this.playerCollisionGroup]);
+          box.body.collides([this.boxCollisionGroup, this.playerCollisionGroup], this.hitEnemy, this);
       }
 
       this.player.anchor.setTo(0.5, 0.5);
@@ -55,14 +56,14 @@
 
       this.game.physics.p2.enable(this.player, true);
       this.player.body.kinematic = true;
-
       this.player.body.setCollisionGroup(this.playerCollisionGroup);
-
-      //  The ship will collide with the boxes, and when it strikes one the hitbox callback will fire, causing it to alpha out a bit
-      //  When boxes collide with each other, nothing happens to them.
       this.player.body.collides(this.boxCollisionGroup, this.hitEnemy, this);
-      this.game.physics.p2.gravity.y = 500;
+      this.game.physics.p2.gravity.y = 200;
+      
+      this.velocity = 100;
       this.index = 0;
+      this.outOfBoundsKill = true;
+      this.checkWorldBounds = true;
     },
 
     update: function () {
@@ -83,6 +84,7 @@
       this.player.scale.x = scale * 0.6;
       this.player.scale.y = scale * 0.6;*/
 
+
       this.index++;
       if(this.index === 20) {
         this.index = 0;
@@ -92,8 +94,8 @@
     },
     addEnemy: function () {
       var color = 'blue';
-
-      var box = this.boxes.create(this.game.width / 2, this.game.height*10, color);
+      var x = Math.floor((Math.random() * this.game.width));
+      var box = this.boxes.create(x, this.game.height*10, color);
           box.body.setRectangle(20, 20);
           box.scale.set(0.2);
 
