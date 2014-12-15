@@ -40,7 +40,27 @@
       this.velocity = 100;
       this.index = 0;
       //this.outOfBoundsKill = true;
-      //this.checkWorldBounds = true;
+      this.checkWorldBounds = true;
+
+      this.input.onDown.add(this.onDown, this);
+    },
+
+    onDown: function () {
+
+      var radius = 200,
+          mass = 1,
+          force = 5;
+
+      var circle = new Phaser.Circle(this.input.position.x, this.input.position.y, radius);
+
+      this.boxes.forEach(function(object) {
+          if(circle.contains(object.position.x, object.position.y)){
+            var distance = object.position.distance(circle);
+            var angle = object.position.angle(circle);
+            object.body.velocity.x += Math.cos(angle) * ((radius - distance) / mass) * force;
+            object.body.velocity.y += Math.sin(angle) * ((radius - distance) / mass) * force;
+          }
+        }, this);
     },
 
     update: function () {
@@ -86,7 +106,7 @@
 
       box.body.setCollisionGroup(this.boxCollisionGroup);
       box.body.collides([this.boxCollisionGroup, this.playerCollisionGroup]);
-      box.body.collideWorldBounds = false;
+      box.body.collideWorldBounds = true;
     },
     onInputDown: function () {
       this.game.state.start('menu');
