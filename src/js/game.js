@@ -41,6 +41,7 @@
       this.index = 0;
       //this.outOfBoundsKill = true;
       this.checkWorldBounds = true;
+      this.maxPool = 100;
 
       this.input.onDown.add(this.onDown, this);
     },
@@ -98,6 +99,10 @@
       
     },
     addEnemy: function (c, mx, a) {
+
+      if(this.maxPool < this.boxes.countLiving()){
+        return;
+      }
       var color = c;
       var box = this.boxes.create(mx, this.game.height-500, color);
       box.body.setRectangle(10, 10);
