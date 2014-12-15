@@ -80,8 +80,8 @@
     addEnemy: function (c, mx, a) {
       var color = c;
       var box = this.boxes.create(mx, this.game.height-500, color);
-      box.body.setRectangle(20, 20);
-      box.scale.set(0.2);
+      box.body.setRectangle(10, 10);
+      box.scale.set(1);
       box.angle = a;
 
       box.body.setCollisionGroup(this.boxCollisionGroup);
