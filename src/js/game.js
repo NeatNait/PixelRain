@@ -15,7 +15,7 @@
       // Use the logo as player
       this.player = this.add.sprite(x, y, 'player');
       this.player.anchor.setTo(0.5, 0.5);
-      this.game.world.setBounds(0, 0, 2000, 2000);
+      //this.game.world.setBounds(0, 0, 1000, 1000);
 
       this.game.physics.startSystem(Phaser.Physics.P2JS);
 
@@ -31,26 +31,6 @@
       this.boxes.enableBody = true;
       this.boxes.physicsBodyType = Phaser.Physics.P2JS;
 
-      for (i = 0; i < 30; i++){
-
-          var color = 'blue';
-
-          if(i%2){
-            color = 'red';
-          }
-          else if(i%3){
-            color = 'green';
-          }
-
-
-          var box = this.boxes.create(x, y*10, color);
-          box.body.setRectangle(20, 20);
-          box.scale.set(0.2);
-
-          box.body.setCollisionGroup(this.boxCollisionGroup);
-          box.body.collides([this.boxCollisionGroup, this.playerCollisionGroup], this.hitEnemy, this);
-      }
-
       this.player.anchor.setTo(0.5, 0.5);
       this.player.scale.set(0.3);
 
@@ -62,8 +42,8 @@
       
       this.velocity = 100;
       this.index = 0;
-      this.outOfBoundsKill = true;
-      this.checkWorldBounds = true;
+      //this.outOfBoundsKill = true;
+      //this.checkWorldBounds = true;
     },
 
     update: function () {
@@ -88,19 +68,20 @@
       this.index++;
       if(this.index === 20) {
         this.index = 0;
-        this.addEnemy();
+        this.addEnemy('blue');
       }
       
     },
-    addEnemy: function () {
-      var color = 'blue';
+    addEnemy: function (c) {
+      var color = c;
       var x = Math.floor((Math.random() * this.game.width));
-      var box = this.boxes.create(x, this.game.height*10, color);
-          box.body.setRectangle(20, 20);
-          box.scale.set(0.2);
+      var box = this.boxes.create(x, this.game.height-500, color);
+      box.body.setRectangle(20, 20);
+      box.scale.set(0.2);
 
-          box.body.setCollisionGroup(this.boxCollisionGroup);
-          box.body.collides([this.boxCollisionGroup, this.playerCollisionGroup]);
+      box.body.setCollisionGroup(this.boxCollisionGroup);
+      box.body.collides([this.boxCollisionGroup, this.playerCollisionGroup]);
+      box.body.collideWorldBounds = false;
     },
     onInputDown: function () {
       this.game.state.start('menu');
