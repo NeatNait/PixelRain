@@ -9,8 +9,7 @@
 
     create: function () {
       var x = this.game.width / 2
-        , y = this.game.height / 2
-        , i;
+        , y = this.game.height / 2;
 
       // Use the logo as player
       this.player = this.add.sprite(x, y, 'player');
@@ -47,7 +46,7 @@
     },
 
     update: function () {
-      /*var x, y, cx, cy, dx, dy, angle, scale;
+      var x, y, cx, cy, angle;
 
       x = this.input.position.x;
       y = this.input.position.y;
@@ -55,7 +54,7 @@
       cy = this.world.centerY;
 
       angle = Math.atan2(y - cy, x - cx) * (180 / Math.PI);
-      this.player.angle = angle;
+      /*this.player.angle = angle;
 
       dx = x - cx;
       dy = y - cy;
@@ -66,18 +65,18 @@
 
 
       this.index++;
-      if(this.index === 20) {
+      if(this.index === 10) {
         this.index = 0;
-        this.addEnemy('blue');
+        this.addEnemy('blue', x, angle);
       }
       
     },
-    addEnemy: function (c) {
+    addEnemy: function (c, mx, a) {
       var color = c;
-      var x = Math.floor((Math.random() * this.game.width));
-      var box = this.boxes.create(x, this.game.height-500, color);
+      var box = this.boxes.create(mx, this.game.height-500, color);
       box.body.setRectangle(20, 20);
       box.scale.set(0.2);
+      box.angle = a;
 
       box.body.setCollisionGroup(this.boxCollisionGroup);
       box.body.collides([this.boxCollisionGroup, this.playerCollisionGroup]);
