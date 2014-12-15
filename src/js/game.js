@@ -29,7 +29,7 @@
 
       this.logo.scale.set(0.3);
 
-      this.game.physics.p2.enable(this.logo, true);
+      this.game.physics.p2.enable(this.logo, false);
       this.logo.body.clearShapes();
       this.logo.body.loadPolygon('physicsLogo', 'logoTrans');
       this.logo.body.kinematic = true;
