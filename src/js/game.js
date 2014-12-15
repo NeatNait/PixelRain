@@ -41,7 +41,7 @@
       this.generateRate = 0;
       //this.outOfBoundsKill = true;
       this.checkWorldBounds = true;
-      this.maxPool = 1000;
+      this.maxPool = 300;
 
       this.input.onDown.add(this.onDown, this);
     },
@@ -57,7 +57,7 @@
       angle = Math.atan2(y - cy, x - cx) * (180 / Math.PI);
 
       this.generateRate++;
-      if(this.generateRate === 10) {
+      if(this.generateRate === 10 && this.maxPool > this.boxes.countLiving()) {
         this.randomBox(x, this.game.height - 500, angle);
         this.generateRate = 0;
       }
@@ -85,13 +85,15 @@
     addBox: function (c, mx, a, my) {
 
       if(this.maxPool < this.boxes.countLiving()){
+        var box = this.boxes.next();
+        box.reset(mx, my);
         return;
       }
       var color = c;
      
       var box = this.boxes.create(mx, my, color);
-      box.body.setRectangle(10, 10);
-      //box.scale.set(1);
+      box.body.setRectangle(21, 21);
+      box.scale.set(2);
       box.angle = a;
 
       box.body.setCollisionGroup(this.boxCollisionGroup);
@@ -111,7 +113,7 @@
 
       var radius = 200,
           mass = 1,
-          force = 5,
+          force = 10,
           //create a circle where the user has clicked
           //that will act as the explosion radius
           circle = new Phaser.Circle(this.input.position.x, this.input.position.y, radius);
